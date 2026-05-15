@@ -275,6 +275,22 @@ GRE 330+ AI Dashboard • Personalized Learning System • July 15, 2026
 </div>
 </div>
 <script>
+const flashcardDatabase=[
+{word:'Quotidian',meaning:'Ordinary or occurring every day.',difficulty:'medium',category:'Vocab'},
+{word:'Obdurate',meaning:'Stubbornly refusing to change.',difficulty:'hard',category:'Vocab'},
+{word:'Ephemeral',meaning:'Lasting for a very short time.',difficulty:'easy',category:'Vocab'},
+{word:'Ratio Trap',meaning:'Always normalize quantities before comparing ratios.',difficulty:'medium',category:'Quant'},
+{word:'RC Strategy',meaning:'Focus on author intent, not memorizing lines.',difficulty:'medium',category:'RC'},
+{word:'AWA Hook',meaning:'Start essays with broad but relevant context.',difficulty:'easy',category:'AWA'},
+{word:'Probability Shortcut',meaning:'Use complement probability for faster solving.',difficulty:'hard',category:'Quant'},
+{word:'Taciturn',meaning:'Reserved or saying very little.',difficulty:'medium',category:'Vocab'}
+];
+
+let reviewedCards=JSON.parse(localStorage.getItem('reviewedCards'))||[];
+let masteredCards=JSON.parse(localStorage.getItem('masteredCards'))||[];
+let weakCards=JSON.parse(localStorage.getItem('weakCards'))||[];
+let streak=Number(localStorage.getItem('streak'))||0;
+
 function updateCountdown(){
 const examDate=new Date('2026-07-15T00:00:00');
 const now=new Date();
@@ -288,8 +304,10 @@ document.getElementById('days').innerHTML=days;
 }
 setInterval(updateCountdown,1000);
 updateCountdown();
+
 const checks=document.querySelectorAll('input[type="checkbox"]');
 const bar=document.getElementById('progressBar');
+
 function updateProgress(){
 const total=checks.length;
 const checked=document.querySelectorAll('input[type="checkbox"]:checked').length;
@@ -300,11 +318,77 @@ localStorage.setItem('gre-progress',percent);
 checks.forEach(c=>c.addEventListener('change',updateProgress));
 const saved=localStorage.getItem('gre-progress');
 if(saved){bar.style.width=saved+'%';}
+
+function generateDailyFlashcards(){
+const container=document.querySelector('.flashcards');
+if(!container)return;
+container.innerHTML='';
+const shuffled=[...flashcardDatabase].sort(()=>0.5-Math.random());
+const todaysCards=shuffled.slice(0,6);
+localStorage.setItem('todaysCards',JSON.stringify(todaysCards));
+
+todaysCards.forEach(card=>{
+const div=document.createElement('div');
+div.className='flashcard';
+div.innerHTML=`
+<div class="flash-inner">
+<div class="flash-front">
+<h3>${card.word}</h3>
+<p>${card.category} • ${card.difficulty}</p>
+<p style="margin-top:12px">Tap to reveal</p>
+</div>
+<div class="flash-back">
+<h3>Meaning</h3>
+<p>${card.meaning}</p>
+<div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+<button onclick="markCard('easy','${card.word}')">Easy</button>
+<button onclick="markCard('medium','${card.word}')">Medium</button>
+<button onclick="markCard('hard','${card.word}')">Hard</button>
+</div>
+</div>
+</div>`;
+container.appendChild(div);
+});
+
 document.querySelectorAll('.flashcard').forEach(card=>{
 card.addEventListener('click',()=>{
 card.classList.toggle('flipped');
 });
 });
+}
+
+function markCard(level,word){
+reviewedCards.push(word);
+localStorage.setItem('reviewedCards',JSON.stringify(reviewedCards));
+
+if(level==='easy'){
+masteredCards.push(word);
+localStorage.setItem('masteredCards',JSON.stringify(masteredCards));
+}
+
+if(level==='hard'){
+weakCards.push(word);
+localStorage.setItem('weakCards',JSON.stringify(weakCards));
+}
+
+updateAnalytics();
+}
+
+function updateAnalytics(){
+const analytics=document.getElementById('analytics');
+if(!analytics)return;
+analytics.innerHTML=`
+<div class="stats">
+<div class="stat"><h2>${reviewedCards.length}</h2><span>Cards Reviewed</span></div>
+<div class="stat"><h2>${masteredCards.length}</h2><span>Mastered Cards</span></div>
+<div class="stat"><h2>${weakCards.length}</h2><span>Weak Cards</span></div>
+<div class="stat"><h2>${Math.min(100,Math.floor((masteredCards.length/(reviewedCards.length||1))*100))}%</h2><span>Retention</span></div>
+</div>`;
+}
+
+generateDailyFlashcards();
+updateAnalytics();
 </script>
+<div id="analytics" style="margin-top:30px"></div>
 </body>
 </html>
