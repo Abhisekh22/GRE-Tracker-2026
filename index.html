@@ -4,9 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GRE 330+ Elite Dashboard</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
 <style>
 :root{
 --bg:#0b1020;
@@ -15,418 +13,411 @@
 --border:#26365f;
 --text:#f5f7ff;
 --muted:#9aa6c5;
---accent:#7c5cff;
+--accent:#7ec8a5;
 --green:#37d67a;
 --blue:#44b3ff;
+--orange:#ff9d42;
+--red:#ff5f6d;
 }
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
-
+*{margin:0;padding:0;box-sizing:border-box}
 body{
 font-family:'Inter',sans-serif;
-background:linear-gradient(135deg,#09111f,#0f1830,#0b1020);
+background:linear-gradient(135deg,#0d1f1c,#122620 45%,#172b35);
 color:var(--text);
-padding:20px;
+overflow-x:hidden;
 }
-
-.container{
-max-width:1400px;
-margin:auto;
-}
-
+.container{max-width:1500px;margin:auto;padding:24px}
 .hero{
 background:linear-gradient(135deg,rgba(124,92,255,.18),rgba(68,179,255,.08));
-padding:40px;
-border-radius:28px;
 border:1px solid var(--border);
+border-radius:28px;
+padding:36px;
 margin-bottom:24px;
+position:relative;
+overflow:hidden;
 }
-
+.hero::after{
+content:'330+';
+position:absolute;
+right:-20px;
+top:-30px;
+font-size:180px;
+font-weight:800;
+opacity:.05;
+}
+.badge{
+display:inline-block;
+padding:8px 14px;
+background:rgba(124,92,255,.15);
+border:1px solid rgba(124,92,255,.4);
+border-radius:999px;
+font-size:12px;
+font-weight:600;
+margin-bottom:18px;
+}
 .hero h1{
-font-size:clamp(40px,6vw,70px);
-margin-bottom:14px;
+font-size:clamp(36px,6vw,72px);
+line-height:1;
+margin-bottom:16px;
+font-weight:800;
 }
-
 .hero p{
-color:var(--muted);
+max-width:760px;
 line-height:1.8;
-max-width:800px;
+color:var(--muted);
+font-size:16px;
 }
-
 .stats{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-gap:18px;
+gap:16px;
 margin-bottom:24px;
 }
-
 .stat{
 background:var(--card);
-padding:24px;
+border:1px solid var(--border);
 border-radius:20px;
-border:1px solid var(--border);
+padding:24px;
 }
-
-.stat h2{
-font-size:34px;
-margin-bottom:8px;
-}
-
-.stat span{
-color:var(--muted);
-}
-
-.panel{
-background:var(--card);
-padding:28px;
-border-radius:24px;
-border:1px solid var(--border);
-margin-bottom:24px;
-}
-
-.panel h2{
-margin-bottom:20px;
-}
-
-.grid{
+.stat h2{font-size:34px;margin-bottom:8px}
+.stat span{color:var(--muted);font-size:13px}
+.layout{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+grid-template-columns:320px 1fr;
 gap:20px;
 }
-
-.card{
-background:var(--card2);
-padding:22px;
-border-radius:18px;
+.sidebar{
+background:var(--card);
 border:1px solid var(--border);
+border-radius:24px;
+padding:20px;
+height:calc(100vh - 40px);
+position:sticky;
+top:20px;
+overflow:auto;
 }
-
-.card h3{
-margin-bottom:16px;
+.sidebar h3{margin-bottom:18px;font-size:18px}
+.day{
+padding:14px;
+border:1px solid transparent;
+border-radius:14px;
+margin-bottom:10px;
+cursor:pointer;
+background:rgba(255,255,255,.02);
+transition:.25s;
 }
-
-.card ul{
-padding-left:18px;
-line-height:1.8;
-color:var(--muted);
-}
-
-.checklist label{
+.day:hover{border-color:var(--accent);transform:translateY(-1px)}
+.day.active{background:rgba(124,92,255,.15);border-color:var(--accent)}
+.day small{color:var(--muted);display:block;margin-top:4px}
+.main{
 display:flex;
-align-items:center;
-gap:10px;
-padding:12px;
-background:rgba(255,255,255,.03);
-border-radius:12px;
-margin-bottom:12px;
+flex-direction:column;
+gap:20px;
 }
-
-input[type='checkbox']{
-width:18px;
-height:18px;
-accent-color:var(--green);
+.panel{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:24px;
+padding:28px;
 }
-
 .progress{
 height:12px;
-background:#1c2847;
+background:#1b2747;
 border-radius:999px;
 overflow:hidden;
-margin-top:20px;
+margin-top:16px;
 }
-
 .progress-bar{
 height:100%;
 width:0%;
 background:linear-gradient(90deg,var(--accent),var(--blue));
 transition:.4s;
 }
-
-.week{
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:18px;
+margin-top:18px;
+}
+.card{
+background:var(--card2);
+border:1px solid var(--border);
+border-radius:18px;
+padding:20px;
+}
+.card h4{margin-bottom:12px;font-size:18px}
+.card ul{padding-left:18px}
+.card li{margin-bottom:10px;color:var(--muted);line-height:1.6}
+.topic{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:12px 14px;
+border-radius:12px;
+background:rgba(255,255,255,.03);
+margin-bottom:10px;
+}
+.topic strong{font-size:14px}
+.topic span{font-size:12px;color:var(--muted)}
+.checklist label{
+display:flex;
+align-items:center;
+gap:10px;
+padding:12px;
+border-radius:12px;
+background:rgba(255,255,255,.03);
+margin-bottom:10px;
+}
+input[type='checkbox']{
+width:18px;
+height:18px;
+accent-color:var(--green);
+}
+.phase{
+padding:14px;
+border-radius:16px;
+margin-bottom:12px;
+background:linear-gradient(135deg,rgba(124,92,255,.15),rgba(68,179,255,.06));
+border:1px solid var(--border);
+}
+.phase h4{margin-bottom:6px}
+.mock{
 padding:16px;
 border-radius:16px;
-margin-bottom:14px;
-background:rgba(255,255,255,.03);
+background:rgba(255,95,109,.08);
+border:1px solid rgba(255,95,109,.2);
+margin-bottom:12px;
 }
-
-.week h4{
-margin-bottom:8px;
-}
-
-.week p{
-color:var(--muted);
-line-height:1.7;
-}
-
 .footer{
 text-align:center;
 padding:30px;
 color:var(--muted);
 }
-
-@media(max-width:768px){
-.hero{
-padding:24px;
-}
-
-.panel{
-padding:20px;
-}
+@media(max-width:980px){
+.layout{grid-template-columns:1fr}
+.sidebar{height:auto;position:relative;top:0}
 }
 </style>
 </head>
-
 <body>
-
 <div class="container">
-
 <div class="hero">
-<h1>GRE 330+ Elite Dashboard</h1>
-
-<p>
-Target Exam Date: July 10, 2026<br><br>
-
-Designed specifically for:
-- 330+ GRE Target
-- 310 Mock Starting Point
-- Quant 166–168 Goal
-- Verbal 162+ Goal
-- Intensive 8-week preparation strategy
-</p>
+<div class="badge">GRE 330+ LIVE TRACKER • JULY 15, 2026</div>
+<h1>Elite GRE Preparation Dashboard</h1>
+<p>Designed specifically for your 330+ target from a 310-level starting point. This system focuses heavily on Quant improvement to 166–168, Verbal acceleration to 162+, vocabulary retention, timed section mastery, ETS pattern recognition, and aggressive mock-test analysis.</p>
 </div>
-
+<div class="panel" style="margin-bottom:24px;background:linear-gradient(135deg,rgba(126,200,165,.18),rgba(68,179,255,.08));">
+<h2 style="margin-bottom:18px">Live GRE Countdown</h2>
+<div id="countdown" style="font-size:clamp(28px,5vw,54px);font-weight:800;color:#9be7c4;margin-bottom:10px"></div>
+<p style="color:var(--muted);line-height:1.7">Your GRE exam is scheduled for July 15, 2026. Every day now matters. Stay consistent and execute daily targets aggressively.</p>
+</div>
 <div class="stats">
-
-<div class="stat">
-<h2>330+</h2>
-<span>Target Score</span>
+<div class="stat"><h2>330+</h2><span>Target GRE Score</span></div>
+<div class="stat"><h2 id="daysLeft">--</h2><span>Days Remaining</span></div>
+<div class="stat"><h2>5–7h</h2><span>Daily Study Target</span></div>
+<div class="stat"><h2>8</h2><span>Full Mock Tests</span></div>
+<div class="stat"><h2>1500</h2><span>Vocabulary Goal</span></div>
 </div>
-
-<div class="stat">
-<h2>56</h2>
-<span>Days Remaining</span>
+<div class="layout">
+<div class="sidebar">
+<h3>Study Roadmap</h3>
+<div class="day active"><strong>Phase 1 · Foundation</strong><small>May 15 – June 5</small></div>
+<div class="day"><strong>Phase 2 · Application</strong><small>June 6 – June 25</small></div>
+<div class="day"><strong>Phase 3 · Advanced</strong><small>June 26 – July 8</small></div>
+<div class="day"><strong>July 9 · Light Revision</strong><small>No heavy study</small></div>
+<div style="margin-top:20px">
+<h3>Daily Core Targets</h3>
+<div class="topic"><strong>Vocabulary</strong><span>50 words/day</span></div>
+<div class="topic"><strong>Quant Questions</strong><span>35–45/day</span></div>
+<div class="topic"><strong>Verbal Questions</strong><span>25–35/day</span></div>
+<div class="topic"><strong>RC Passages</strong><span>3/day</span></div>
+<div class="topic"><strong>Error Review</strong><span>30 mins</span></div>
 </div>
-
-<div class="stat">
-<h2>5–7h</h2>
-<span>Daily Study Goal</span>
 </div>
-
-<div class="stat">
-<h2>1500</h2>
-<span>Vocabulary Goal</span>
-</div>
-
-</div>
-
+<div class="main">
 <div class="panel">
 <h2>Overall Progress</h2>
-
-<div class="progress">
-<div class="progress-bar" id="progressBar"></div>
+<div class="progress"><div class="progress-bar" id="bar"></div></div>
+<p style="margin-top:14px;color:var(--muted)">Mark completed tasks daily to track your preparation consistency.</p>
 </div>
-
-<p style="margin-top:14px;color:var(--muted)">
-Complete daily tasks to track consistency.
-</p>
-</div>
-
 <div class="panel">
-
-<h2>Daily Study Structure</h2>
-
+<h2>Phase Breakdown</h2>
 <div class="grid">
-
+<div class="phase">
+<h4>Phase 1 · Build Foundations</h4>
+<p style="color:var(--muted);line-height:1.7">Arithmetic, algebra, fractions, percentages, RC basics, TC/SE fundamentals, vocabulary system, GRE timing introduction.</p>
+</div>
+<div class="phase">
+<h4>Phase 2 · Timed Application</h4>
+<p style="color:var(--muted);line-height:1.7">Advanced geometry, data interpretation, hard RCs, timed sets, medium/hard-level ETS questions, mistake reduction.</p>
+</div>
+<div class="phase">
+<h4>Phase 3 · Score Optimization</h4>
+<p style="color:var(--muted);line-height:1.7">Full-length mocks, hard question drilling, section timing mastery, high-pressure simulation, weak-area correction.</p>
+</div>
+</div>
+</div>
+<div class="panel">
+<h2>Today’s Ideal Study Structure</h2>
+<div class="grid">
 <div class="card">
-<h3>Quant</h3>
-
+<h4>Quantitative Reasoning</h4>
 <ul>
-<li>Arithmetic</li>
-<li>Number Properties</li>
-<li>Algebra</li>
-<li>Geometry</li>
-<li>Probability</li>
-<li>Data Interpretation</li>
-<li>35–45 Questions Daily</li>
+<li>Arithmetic & Number Properties</li>
+<li>Algebra & Quadratics</li>
+<li>Geometry & Coordinate Geometry</li>
+<li>Probability & Data Analysis</li>
+<li>35–45 questions daily</li>
+<li>Focus on ETS-style logic</li>
 </ul>
 </div>
-
 <div class="card">
-<h3>Verbal</h3>
-
+<h4>Verbal Reasoning</h4>
 <ul>
 <li>Text Completion</li>
 <li>Sentence Equivalence</li>
 <li>Reading Comprehension</li>
 <li>Critical Reasoning</li>
-<li>3 RC Passages Daily</li>
-<li>Vocabulary Revision</li>
+<li>3 RC passages daily</li>
+<li>Vocabulary revision daily</li>
 </ul>
 </div>
-
 <div class="card">
-<h3>AWA</h3>
-
+<h4>Analytical Writing</h4>
 <ul>
-<li>Issue Essay</li>
-<li>Argument Essay</li>
-<li>Essay Templates</li>
-<li>2 Essays Weekly</li>
-<li>Target 4.5+</li>
+<li>Issue Essay structure</li>
+<li>Argument Essay structure</li>
+<li>Practice 2 essays/week initially</li>
+<li>Increase timing discipline later</li>
+<li>Target 4.5+ score</li>
 </ul>
 </div>
-
 </div>
-
 </div>
-
 <div class="panel">
-
-<h2>Preparation Phases</h2>
-
-<div class="week">
-<h4>Phase 1 · Foundation</h4>
-<p>
-Arithmetic, algebra, vocabulary system, RC basics, TC/SE fundamentals, GRE timing introduction.
-</p>
-</div>
-
-<div class="week">
-<h4>Phase 2 · Application</h4>
-<p>
-Timed sets, geometry, hard verbal practice, medium/hard ETS problems, error reduction.
-</p>
-</div>
-
-<div class="week">
-<h4>Phase 3 · Optimization</h4>
-<p>
-Mock tests, score optimization, timing mastery, weak-area correction.
-</p>
-</div>
-
-</div>
-
-<div class="panel">
-
-<h2>Daily Checklist</h2>
-
+<h2>Today's GRE Mission Checklist</h2>
+<p style="margin-top:-6px;margin-bottom:18px;color:var(--muted)">These are your non-negotiable daily tasks to move from a 310-level mock score to a 330+ GRE score.</p>
 <div class="checklist">
-
-<label>
-<input type="checkbox">
-50 Vocabulary Words Completed
-</label>
-
-<label>
-<input type="checkbox">
-Vocabulary Revision Completed
-</label>
-
-<label>
-<input type="checkbox">
-Quant Practice Completed
-</label>
-
-<label>
-<input type="checkbox">
-Verbal Practice Completed
-</label>
-
-<label>
-<input type="checkbox">
-3 RC Passages Completed
-</label>
-
-<label>
-<input type="checkbox">
-Timed Practice Completed
-</label>
-
-<label>
-<input type="checkbox">
-Error Log Updated
-</label>
-
-<label>
-<input type="checkbox">
-Mock/Test Analysis Done
-</label>
-
+<label><input type="checkbox"> Learn + revise 50 GRE vocabulary words</label>
+<label><input type="checkbox"> Solve 20 Text Completion & Sentence Equivalence questions</label>
+<label><input type="checkbox"> Solve 40 Quant questions (Arithmetic + Algebra + Geometry)</label>
+<label><input type="checkbox"> Complete 3 Reading Comprehension passages</label>
+<label><input type="checkbox"> Review mistakes deeply & update error log</label>
+<label><input type="checkbox"> Complete one 35-minute timed Quant section</label>
+<label><input type="checkbox"> Complete one 35-minute timed Verbal section</label>
+<label><input type="checkbox"> Revise formulas + weak vocabulary words</label>
 </div>
-
 </div>
-
 <div class="panel">
-
-<h2>Mock Test Targets</h2>
-
+<h2>Recommended Resources</h2>
 <div class="grid">
-
 <div class="card">
-<h3>Mock 1</h3>
-<p style="color:var(--muted)">
-Target Score: 315–318
-</p>
+<h4>Quant Resources</h4>
+<ul>
+<li>ETS Official Quant Guide</li>
+<li>Manhattan 5 lb</li>
+<li>GregMat Quant</li>
+<li>ETS PowerPrep Tests</li>
+</ul>
 </div>
-
 <div class="card">
-<h3>Mock 2</h3>
-<p style="color:var(--muted)">
-Target Score: 320+
-</p>
+<h4>Verbal Resources</h4>
+<ul>
+<li>ETS Official Verbal Guide</li>
+<li>GregMat Vocabulary Mountain</li>
+<li>GRE Big Book RC Passages</li>
+<li>Magoosh Flashcards</li>
+</ul>
 </div>
-
 <div class="card">
-<h3>Mock 3+</h3>
-<p style="color:var(--muted)">
-Target Score: 325–332
-</p>
+<h4>Mock Strategy</h4>
+<ul>
+<li>1 mock/week initially</li>
+<li>2 mocks/week in final phase</li>
+<li>Spend 4–5 hours reviewing mistakes</li>
+<li>Track score progression carefully</li>
+</ul>
 </div>
-
 </div>
-
 </div>
-
+<div class="panel">
+<h2>Mock Test Tracker</h2>
+<div class="mock"><strong>Mock 1</strong><br><span style="color:var(--muted)">Target: 315–318</span></div>
+<div class="mock"><strong>Mock 2</strong><br><span style="color:var(--muted)">Target: 320+</span></div>
+<div class="mock"><strong>Mock 3</strong><br><span style="color:var(--muted)">Target: 323–325</span></div>
+<div class="mock"><strong>Mock 4+</strong><br><span style="color:var(--muted)">Target: Consistent 328–332</span></div>
+</div>
+<div class="panel">
+<h2>Critical Strategy Notes</h2>
+<div class="grid">
+<div class="card">
+<h4>Quant Focus</h4>
+<ul>
+<li>Your biggest opportunity is Quant 166+</li>
+<li>Master medium-level questions first</li>
+<li>Then attack hard questions aggressively</li>
+<li>Reduce careless mistakes to near zero</li>
+</ul>
+</div>
+<div class="card">
+<h4>Verbal Focus</h4>
+<ul>
+<li>Vocabulary consistency is non-negotiable</li>
+<li>RC logic matters more than speed initially</li>
+<li>TC/SE pattern recognition is essential</li>
+<li>162+ verbal unlocks 330+</li>
+</ul>
+</div>
+<div class="card">
+<h4>Mental Strategy</h4>
+<ul>
+<li>Do not panic during hard sections</li>
+<li>Move quickly from impossible questions</li>
+<li>Confidence improves score performance</li>
+<li>Consistency beats motivation</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
 <div class="footer">
-GRE 330+ Dashboard • July 10, 2026
+GRE 330+ Elite Dashboard • Built specifically for your July 10, 2026 target
 </div>
-
 </div>
-
 <script>
-
-const checkboxes=document.querySelectorAll('input[type=\"checkbox\"]');
-const progressBar=document.getElementById('progressBar');
-
-function updateProgress(){
-
-const total=checkboxes.length;
-const checked=document.querySelectorAll('input[type=\"checkbox\"]:checked').length;
-
-const percent=(checked/total)*100;
-
-progressBar.style.width=percent+'%';
-
-localStorage.setItem('gre-progress',percent);
-
+function updateCountdown(){
+const examDate=new Date('2026-07-15T00:00:00');
+const now=new Date();
+const diff=examDate-now;
+const days=Math.floor(diff/(1000*60*60*24));
+const hours=Math.floor((diff%(1000*60*60*24))/(1000*60*60));
+const mins=Math.floor((diff%(1000*60*60))/(1000*60));
+const secs=Math.floor((diff%(1000*60))/1000);
+const countdown=document.getElementById('countdown');
+const daysLeft=document.getElementById('daysLeft');
+if(countdown){
+countdown.innerHTML=`${days}d ${hours}h ${mins}m ${secs}s`;
 }
-
-checkboxes.forEach(box=>{
-box.addEventListener('change',updateProgress);
+if(daysLeft){
+daysLeft.innerHTML=days;
+}
+}
+setInterval(updateCountdown,1000);
+updateCountdown();
+let progress=0;
+const bar=document.getElementById('bar');
+document.querySelectorAll('input[type="checkbox"]').forEach(box=>{
+box.addEventListener('change',()=>{
+const total=document.querySelectorAll('input[type="checkbox"]').length;
+const checked=document.querySelectorAll('input[type="checkbox"]:checked').length;
+progress=(checked/total)*100;
+bar.style.width=progress+'%';
+localStorage.setItem('gre-progress',progress);
 });
-
+});
 const saved=localStorage.getItem('gre-progress');
-
-if(saved){
-progressBar.style.width=saved+'%';
-}
-
+if(saved){bar.style.width=saved+'%';}
 </script>
-
 </body>
 </html>
