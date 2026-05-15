@@ -1,394 +1,276 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>GRE 330+ AI Study Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-:root{
---bg:#f3f7ff;
---card:#ffffff;
---primary:#5b7cfa;
---secondary:#7ed6c1;
---accent:#ffb86b;
---text:#1f2d3d;
---muted:#6b7a90;
---border:#dde6ff;
---shadow:0 10px 30px rgba(91,124,250,.12);
-}
-*{margin:0;padding:0;box-sizing:border-box}
-body{
-font-family:'Poppins',sans-serif;
-background:linear-gradient(135deg,#f3f7ff,#eefdf8,#fff8f0);
-color:var(--text);
-padding:20px;
-}
-.container{max-width:1600px;margin:auto}
-.hero{
-background:linear-gradient(135deg,#5b7cfa,#7ed6c1);
-color:white;
-padding:40px;
-border-radius:30px;
-margin-bottom:24px;
-box-shadow:var(--shadow);
-}
-.hero h1{font-size:clamp(38px,6vw,72px);margin-bottom:14px}
-.hero p{line-height:1.8;max-width:900px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
-.card{
-background:var(--card);
-padding:24px;
-border-radius:24px;
-box-shadow:var(--shadow);
-border:1px solid var(--border);
-margin-bottom:20px;
-}
-.card h2,.card h3{margin-bottom:16px}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px;margin-bottom:24px}
-.stat{
-background:white;
-padding:24px;
-border-radius:22px;
-box-shadow:var(--shadow);
-text-align:center;
-}
-.stat h2{font-size:38px;color:var(--primary)}
-.stat span{color:var(--muted)}
-.task{
-padding:16px;
-border-radius:18px;
-background:#f8fbff;
-margin-bottom:14px;
-border-left:6px solid var(--primary);
-}
-.task h4{margin-bottom:8px}
-.task p{color:var(--muted);line-height:1.7;font-size:14px}
-.task a{display:inline-block;margin-top:10px;color:var(--primary);font-weight:600;text-decoration:none}
-.checklist label{
-display:flex;
-gap:12px;
-align-items:flex-start;
-padding:16px;
-background:#f9fbff;
-border-radius:16px;
-margin-bottom:14px;
-}
-input[type='checkbox']{margin-top:4px;transform:scale(1.3);accent-color:var(--secondary)}
-.progress{
-height:14px;
-background:#e8eeff;
-border-radius:999px;
-overflow:hidden;
-margin-top:20px;
-}
-.progress-bar{
-height:100%;
-width:0%;
-background:linear-gradient(90deg,#5b7cfa,#7ed6c1);
-transition:.4s;
-}
-.flashcards{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:16px;
-}
-.flashcard{
-perspective:1000px;
-height:180px;
-cursor:pointer;
-}
-.flash-inner{
-position:relative;
-width:100%;
-height:100%;
-transition:transform .6s;
-transform-style:preserve-3d;
-}
-.flashcard.flipped .flash-inner{transform:rotateY(180deg)}
-.flash-front,.flash-back{
-position:absolute;
-width:100%;
-height:100%;
-backface-visibility:hidden;
-border-radius:20px;
-padding:20px;
-box-shadow:var(--shadow);
-display:flex;
-flex-direction:column;
-justify-content:center;
-}
-.flash-front{background:linear-gradient(135deg,#5b7cfa,#6f92ff);color:white}
-.flash-back{background:white;color:var(--text);transform:rotateY(180deg)}
-.countdown{
-font-size:clamp(28px,5vw,54px);
-font-weight:800;
-margin-top:16px;
-}
-ul{padding-left:20px;line-height:1.8;color:var(--muted)}
-.footer{text-align:center;padding:30px;color:var(--muted)}
-@media(max-width:768px){body{padding:10px}.hero{padding:26px}}
-</style>
-</head>
-<body>
-<div class="container">
-<div class="hero">
-<h1>GRE 330+ AI Study Dashboard</h1>
-<p>
-Personalized for your July 15, 2026 GRE target. This dashboard micro-manages your daily GRE preparation from basics to advanced level, focusing on improving from ~310 mocks to a 330+ score through structured Quant mastery, Verbal acceleration, vocabulary systems, mock analytics, and adaptive study planning.
-</p>
-<div class="countdown" id="countdown"></div>
-</div>
-<div class="stats">
-<div class="stat"><h2 id="days">--</h2><span>Days Left</span></div>
-<div class="stat"><h2>330+</h2><span>Target Score</span></div>
-<div class="stat"><h2>166+</h2><span>Quant Goal</span></div>
-<div class="stat"><h2>162+</h2><span>Verbal Goal</span></div>
-</div>
+<!-- ========================= -->
+<!-- ADVANCED GRE MEMORY SYSTEM -->
+<!-- ========================= -->
+
 <div class="card">
-<h2>Today's GRE Mission</h2>
-<div class="progress"><div class="progress-bar" id="progressBar"></div></div>
-<p style="margin-top:12px;color:var(--muted)">Every task below is designed to build GRE fundamentals from scratch. Check completed tasks to track progress.</p>
-</div>
-<div class="grid">
-<div class="card">
-<h2>Daily Micro-Managed Tasks</h2>
-<div class="checklist">
-<label><input type="checkbox"><div><strong>Learn 50 GRE Vocabulary Words</strong><br><span style="color:var(--muted)">Study high-frequency GRE words with mnemonics and examples. Revise yesterday's words before learning new ones.</span></div></label>
-<label><input type="checkbox"><div><strong>Solve 20 Text Completion Questions</strong><br><span style="color:var(--muted)">Practice identifying sentence logic, contrast words, and contextual clues in GRE-style questions.</span></div></label>
-<label><input type="checkbox"><div><strong>Solve 20 Sentence Equivalence Questions</strong><br><span style="color:var(--muted)">Focus on finding synonym pairs and understanding nuanced vocabulary relationships.</span></div></label>
-<label><input type="checkbox"><div><strong>Complete 40 Quant Questions</strong><br><span style="color:var(--muted)">Today's Quant focus: Arithmetic fundamentals, percentages, fractions, ratios, averages, and algebra basics.</span></div></label>
-<label><input type="checkbox"><div><strong>Read 3 RC Passages</strong><br><span style="color:var(--muted)">Practice active reading, identifying author's tone, assumptions, and passage structure.</span></div></label>
-<label><input type="checkbox"><div><strong>Timed Quant Section</strong><br><span style="color:var(--muted)">Complete one 35-minute Quant section under strict timed conditions.</span></div></label>
-<label><input type="checkbox"><div><strong>Timed Verbal Section</strong><br><span style="color:var(--muted)">Complete one 35-minute Verbal section to improve pacing and endurance.</span></div></label>
-<label><input type="checkbox"><div><strong>Error Log Analysis</strong><br><span style="color:var(--muted)">Review every mistake deeply and note the correct solving approach.</span></div></label>
-</div>
-</div>
-<div class="card">
-<h2>Today's Learning Roadmap</h2>
-<div class="task">
-<h4>DAY 1 · Quant Foundations</h4>
-<p>
-Today's focus is building GRE arithmetic fundamentals from scratch. Learn percentages, fractions, ratios, averages, divisibility, and basic algebra concepts before moving to harder GRE Quant topics.
-</p>
-<ul>
-<li>Watch Quant Playlist Video 1</li>
-<li>Learn percentages + ratio concepts</li>
-<li>Solve 25 arithmetic questions</li>
-<li>Solve 10 timed GRE Quant questions</li>
-<li>Create flashcards for mistakes</li>
-<li>Revise formulas before sleeping</li>
-</ul>
-<a href="https://www.youtube.com/watch?v=YVOh7jhPNoc&list=PLuSzlB7V-ZZR7NMIO-A7VqIK1XPnvuTcE&index=1" target="_blank">Watch Quant Video 1</a>
-</div>
-<div class="task">
-<h4>Reading Comprehension Basics</h4>
-<p>Understand how GRE passages are structured, how to identify author's opinion, and how to eliminate trap answer choices.</p>
-<a href="https://www.youtube.com/results?search_query=GRE+Lesson+Introduction+to+Reading+Comprehension" target="_blank">Watch Recommended Video</a>
-</div>
-<div class="task">
-<h4>Text Completion Strategy</h4>
-<p>Learn how to treat TC questions like logical puzzles by identifying support/contrast relationships.</p>
-<a href="https://www.youtube.com/results?search_query=GRE+Text+Completion+Strategy" target="_blank">Watch Recommended Video</a>
-</div>
-<div class="task">
-<h4>Vocabulary Learning</h4>
-<p>Memorize high-frequency GRE vocabulary through stories, images, and mnemonics for long-term retention.</p>
-<a href="https://www.youtube.com/results?search_query=BARRON+333+high+frequency+GRE+Words" target="_blank">Watch Recommended Video</a>
-</div>
-</div>
-</div>
-<div class="card">
-<h2>AI Smart Flashcard System</h2>
+
+<h2>Quant Formula Flashcards</h2>
+
 <p style="margin-bottom:18px;color:var(--muted)">
-This system is optimized for retention-focused GRE learning using active recall + spaced repetition. The dashboard will prioritize weak cards, difficult concepts, and error-based revision automatically.
+Daily Quant formulas, shortcuts, and GRE traps based on your current learning topic.
 </p>
-<ul>
-<li>Daily new flashcards: 35–50</li>
-<li>Daily review cards: 80–120</li>
-<li>Tracks retention & weak areas</li>
-<li>Generates mistake-based revision cards</li>
-<li>Mixes easy, medium & hard reviews intelligently</li>
-<li>Focuses on high-frequency GRE patterns</li>
-<li>Prevents burnout using adaptive scheduling</li>
-</ul>
-</div>
 
-<div class="card">
-<h2>Interactive GRE Flashcards</h2>
-<p style="margin-bottom:18px;color:var(--muted)">Tap any flashcard to flip it. These are high-frequency GRE words selected from common GRE trends and vocabulary patterns.</p>
 <div class="flashcards">
-<div class="flashcard"><div class="flash-inner"><div class="flash-front"><h3>Quotidian</h3><p>Tap to reveal meaning</p></div><div class="flash-back"><h3>Meaning</h3><p>Ordinary or occurring every day.</p><small>Example: The GRE tests beyond quotidian vocabulary.</small></div></div></div>
-<div class="flashcard"><div class="flash-inner"><div class="flash-front"><h3>Plutocracy</h3><p>Tap to reveal meaning</p></div><div class="flash-back"><h3>Meaning</h3><p>Government by the wealthy.</p><small>Example: Critics called the system a plutocracy.</small></div></div></div>
-<div class="flashcard"><div class="flash-inner"><div class="flash-front"><h3>Obdurate</h3><p>Tap to reveal meaning</p></div><div class="flash-back"><h3>Meaning</h3><p>Stubbornly refusing to change.</p><small>Example: The manager remained obdurate despite protests.</small></div></div></div>
-<div class="flashcard"><div class="flash-inner"><div class="flash-front"><h3>Ephemeral</h3><p>Tap to reveal meaning</p></div><div class="flash-back"><h3>Meaning</h3><p>Lasting for a very short time.</p><small>Example: Fame can be ephemeral.</small></div></div></div>
-</div>
-</div>
-<div class="grid">
-<div class="card">
-<h2>Daily GRE Crack Tips</h2>
-<div class="task">
-<h4>GRE Tip #1</h4>
-<p>Never memorize vocabulary passively. Always learn GRE words using context, usage, and sentence relationships.</p>
-</div>
-<div class="task">
-<h4>GRE Tip #2</h4>
-<p>For Reading Comprehension, understand paragraph purpose instead of trying to memorize every detail.</p>
-</div>
-<div class="task">
-<h4>GRE Tip #3</h4>
-<p>Timed practice is more important than solving unlimited untimed questions.</p>
-</div>
-<div class="task">
-<h4>GRE Tip #4</h4>
-<p>Error analysis is where score improvement actually happens. Review every mistake deeply.</p>
-</div>
-</div>
 
-<div class="card">
-<h2>Best GRE Resources (Filtered)</h2>
-<ul>
-<li>ETS Official GRE Guide</li>
-<li>ETS Quant Practice Questions</li>
-<li>ETS Verbal Practice Questions</li>
-<li>GregMat Vocabulary Mountain</li>
-<li>Manhattan 5 lb Quant</li>
-<li>GRE Big Book RC Practice</li>
-<li>PowerPrep Official Mocks</li>
-</ul>
-</div>
-<div class="card">
-<h2>Video Resources from Your PDF</h2>
-<ul>
-<li>GRE Math Section 101</li>
-<li>GRE Math Review Lesson 1/36</li>
-<li>GRE Text Completion Strategy</li>
-<li>GRE Reading Passage Strategy</li>
-<li>GRE Vocabulary Diagnostic Test</li>
-<li>GRE Verbal Walkthrough</li>
-<li>Analytical Writing Introduction</li>
-</ul>
-</div>
-</div>
-<div class="footer">
-GRE 330+ AI Dashboard • Personalized Learning System • July 15, 2026
-</div>
-</div>
-<script>
-const flashcardDatabase=[
-{word:'Quotidian',meaning:'Ordinary or occurring every day.',difficulty:'medium',category:'Vocab'},
-{word:'Obdurate',meaning:'Stubbornly refusing to change.',difficulty:'hard',category:'Vocab'},
-{word:'Ephemeral',meaning:'Lasting for a very short time.',difficulty:'easy',category:'Vocab'},
-{word:'Ratio Trap',meaning:'Always normalize quantities before comparing ratios.',difficulty:'medium',category:'Quant'},
-{word:'RC Strategy',meaning:'Focus on author intent, not memorizing lines.',difficulty:'medium',category:'RC'},
-{word:'AWA Hook',meaning:'Start essays with broad but relevant context.',difficulty:'easy',category:'AWA'},
-{word:'Probability Shortcut',meaning:'Use complement probability for faster solving.',difficulty:'hard',category:'Quant'},
-{word:'Taciturn',meaning:'Reserved or saying very little.',difficulty:'medium',category:'Vocab'}
-];
-
-let reviewedCards=JSON.parse(localStorage.getItem('reviewedCards'))||[];
-let masteredCards=JSON.parse(localStorage.getItem('masteredCards'))||[];
-let weakCards=JSON.parse(localStorage.getItem('weakCards'))||[];
-let streak=Number(localStorage.getItem('streak'))||0;
-
-function updateCountdown(){
-const examDate=new Date('2026-07-15T00:00:00');
-const now=new Date();
-const diff=examDate-now;
-const days=Math.floor(diff/(1000*60*60*24));
-const hours=Math.floor((diff%(1000*60*60*24))/(1000*60*60));
-const mins=Math.floor((diff%(1000*60*60))/(1000*60));
-const secs=Math.floor((diff%(1000*60))/1000);
-document.getElementById('countdown').innerHTML=`${days} Days ${hours} Hours ${mins} Minutes ${secs} Seconds Remaining`;
-document.getElementById('days').innerHTML=days;
-}
-setInterval(updateCountdown,1000);
-updateCountdown();
-
-const checks=document.querySelectorAll('input[type="checkbox"]');
-const bar=document.getElementById('progressBar');
-
-function updateProgress(){
-const total=checks.length;
-const checked=document.querySelectorAll('input[type="checkbox"]:checked').length;
-const percent=(checked/total)*100;
-bar.style.width=percent+'%';
-localStorage.setItem('gre-progress',percent);
-}
-checks.forEach(c=>c.addEventListener('change',updateProgress));
-const saved=localStorage.getItem('gre-progress');
-if(saved){bar.style.width=saved+'%';}
-
-function generateDailyFlashcards(){
-const container=document.querySelector('.flashcards');
-if(!container)return;
-container.innerHTML='';
-const shuffled=[...flashcardDatabase].sort(()=>0.5-Math.random());
-const todaysCards=shuffled.slice(0,6);
-localStorage.setItem('todaysCards',JSON.stringify(todaysCards));
-
-todaysCards.forEach(card=>{
-const div=document.createElement('div');
-div.className='flashcard';
-div.innerHTML=`
+<div class="flashcard">
 <div class="flash-inner">
+
 <div class="flash-front">
-<h3>${card.word}</h3>
-<p>${card.category} • ${card.difficulty}</p>
-<p style="margin-top:12px">Tap to reveal</p>
+<h3>Percentage Change Formula</h3>
+<p>Tap to reveal</p>
 </div>
+
 <div class="flash-back">
-<h3>Meaning</h3>
-<p>${card.meaning}</p>
-<div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
-<button onclick="markCard('easy','${card.word}')">Easy</button>
-<button onclick="markCard('medium','${card.word}')">Medium</button>
-<button onclick="markCard('hard','${card.word}')">Hard</button>
+<p style="font-weight:700;margin-bottom:10px">
+(New - Old) / Old × 100
+</p>
+
+<p>
+Used in GRE percentage increase/decrease problems.
+</p>
+
+<small>
+GRE Trap: Successive percentage changes are NOT directly additive.
+</small>
+
+</div>
+
 </div>
 </div>
-</div>`;
-container.appendChild(div);
-});
 
-document.querySelectorAll('.flashcard').forEach(card=>{
-card.addEventListener('click',()=>{
-card.classList.toggle('flipped');
-});
-});
-}
+<div class="flashcard">
+<div class="flash-inner">
 
-function markCard(level,word){
-reviewedCards.push(word);
-localStorage.setItem('reviewedCards',JSON.stringify(reviewedCards));
+<div class="flash-front">
+<h3>Average Formula</h3>
+<p>Tap to reveal</p>
+</div>
 
-if(level==='easy'){
-masteredCards.push(word);
-localStorage.setItem('masteredCards',JSON.stringify(masteredCards));
-}
+<div class="flash-back">
 
-if(level==='hard'){
-weakCards.push(word);
-localStorage.setItem('weakCards',JSON.stringify(weakCards));
-}
+<p style="font-weight:700;margin-bottom:10px">
+Average = Sum / Number of Terms
+</p>
 
-updateAnalytics();
-}
+<p>
+One of the most tested GRE Quant concepts.
+</p>
 
-function updateAnalytics(){
-const analytics=document.getElementById('analytics');
-if(!analytics)return;
-analytics.innerHTML=`
+<small>
+Shortcut: Use weighted averages for faster solving.
+</small>
+
+</div>
+
+</div>
+</div>
+
+</div>
+
+</div>
+
+<!-- ========================= -->
+<!-- VERBAL FLASHCARDS -->
+<!-- ========================= -->
+
+<div class="card">
+
+<h2>GRE Verbal Flashcards</h2>
+
+<p style="margin-bottom:18px;color:var(--muted)">
+High-frequency GRE vocabulary optimized for active recall and long-term retention.
+</p>
+
+<div class="flashcards">
+
+<div class="flashcard">
+<div class="flash-inner">
+
+<div class="flash-front">
+<h3>Ephemeral</h3>
+<p>Tap to reveal</p>
+</div>
+
+<div class="flash-back">
+
+<p>
+Pronunciation:
+ih-FEM-er-uhl
+</p>
+
+<p>
+Meaning:
+Lasting for a very short time
+</p>
+
+<p>
+GRE Example:
+Public attention can be ephemeral.
+</p>
+
+<small>
+Memory Trick:
+Think “episode” → short duration
+</small>
+
+</div>
+
+</div>
+</div>
+
+<div class="flashcard">
+<div class="flash-inner">
+
+<div class="flash-front">
+<h3>Obdurate</h3>
+<p>Tap to reveal</p>
+</div>
+
+<div class="flash-back">
+
+<p>
+Pronunciation:
+OB-duh-rut
+</p>
+
+<p>
+Meaning:
+Stubbornly refusing to change
+</p>
+
+<p>
+GRE Example:
+The committee remained obdurate despite criticism.
+</p>
+
+<small>
+Memory Trick:
+“Obdurate” sounds like “hard”
+</small>
+
+</div>
+
+</div>
+</div>
+
+</div>
+
+</div>
+
+<!-- ========================= -->
+<!-- DICTIONARY VAULT -->
+<!-- ========================= -->
+
+<div class="card">
+
+<h2>Dictionary Vault</h2>
+
+<p style="margin-bottom:18px;color:var(--muted)">
+Tracks all GRE flashcards, formulas, and vocabulary reviewed throughout your 50-day timeline.
+</p>
+
 <div class="stats">
-<div class="stat"><h2>${reviewedCards.length}</h2><span>Cards Reviewed</span></div>
-<div class="stat"><h2>${masteredCards.length}</h2><span>Mastered Cards</span></div>
-<div class="stat"><h2>${weakCards.length}</h2><span>Weak Cards</span></div>
-<div class="stat"><h2>${Math.min(100,Math.floor((masteredCards.length/(reviewedCards.length||1))*100))}%</h2><span>Retention</span></div>
-</div>`;
-}
 
-generateDailyFlashcards();
-updateAnalytics();
-</script>
-<div id="analytics" style="margin-top:30px"></div>
-</body>
-</html>
+<div class="stat">
+<h2 id="totalWords">0</h2>
+<span>Total Words Learned</span>
+</div>
+
+<div class="stat">
+<h2 id="formulaCount">0</h2>
+<span>Quant Formulas Learned</span>
+</div>
+
+<div class="stat">
+<h2 id="weakWords">0</h2>
+<span>Weak Vocabulary</span>
+</div>
+
+<div class="stat">
+<h2 id="retentionRate">0%</h2>
+<span>Retention Rate</span>
+</div>
+
+</div>
+
+<div class="task">
+
+<h4>Memory Vault Features</h4>
+
+<ul>
+<li>Tracks all flashcards seen</li>
+<li>Tracks weak vocabulary</li>
+<li>Tracks mastered formulas</li>
+<li>Tracks retention percentage</li>
+<li>Tracks daily review streaks</li>
+<li>Stores flashcard history</li>
+<li>Supports future spaced repetition system</li>
+</ul>
+
+</div>
+
+</div>
+
+<!-- ========================= -->
+<!-- DAILY FORMULA SECTION -->
+<!-- ========================= -->
+
+<div class="card">
+
+<h2>Today's Quant Formula</h2>
+
+<div class="task">
+
+<h4>Percentage Change</h4>
+
+<p>
+Formula:
+</p>
+
+<p style="font-weight:700;margin-top:10px">
+(New - Old) / Old × 100
+</p>
+
+<p style="margin-top:12px">
+Used heavily in GRE arithmetic and data interpretation questions.
+</p>
+
+</div>
+
+</div>
+
+<!-- ========================= -->
+<!-- DAILY GRE WORD -->
+<!-- ========================= -->
+
+<div class="card">
+
+<h2>Today's GRE Word</h2>
+
+<div class="task">
+
+<h4>Quotidian</h4>
+
+<p>
+Pronunciation:
+kwoh-TID-ee-uhn
+</p>
+
+<p>
+Meaning:
+Ordinary or occurring every day
+</p>
+
+<p>
+GRE Example:
+The GRE often tests vocabulary beyond quotidian language.
+</p>
+
+<p>
+Memory Trick:
+“Quotidian” sounds like “quote daily”
+</p>
+
+</div>
+
+</div>
