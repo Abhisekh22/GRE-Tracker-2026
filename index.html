@@ -429,7 +429,7 @@ Successive percentage changes are NOT additive.
 
 <div class="task">
 
-<h3>Reviewed Flashcards</h3>
+<h3>Quant Dictionary</h3>
 
 <div class="flashcards" id="reviewedVault"></div>
 
@@ -437,21 +437,13 @@ Successive percentage changes are NOT additive.
 
 <div class="task">
 
-<h3>Weak Flashcards</h3>
+<h3>Vocabulary Dictionary</h3>
 
 <div class="flashcards" id="weakVault"></div>
 
 </div>
 
 <div class="task">
-
-<h3>Mastered Flashcards</h3>
-
-<div class="flashcards" id="masteredVault"></div>
-
-</div>
-
-</div>
 
 <div class="footer">
 GRE 330+ AI Learning Platform • July 15 2026
@@ -483,6 +475,18 @@ extra:"One of the most tested GRE concepts."
 title:"Ratio Shortcut",
 content:"Normalize values before comparing.",
 extra:"Avoid GRE ratio traps."
+},
+
+{
+title:"Speed Formula",
+content:"Speed = Distance / Time",
+extra:"Important for GRE word problems."
+},
+
+{
+title:"Profit Formula",
+content:"Profit = SP - CP",
+extra:"Frequently tested in GRE arithmetic."
 }
 
 ];
@@ -508,6 +512,20 @@ word:"Quotidian",
 pronunciation:"kwoh-TID-ee-uhn",
 meaning:"Ordinary or everyday",
 example:"GRE vocabulary exceeds quotidian usage."
+},
+
+{
+word:"Taciturn",
+pronunciation:"TASS-ih-turn",
+meaning:"Reserved or silent",
+example:"The taciturn student rarely spoke."
+},
+
+{
+word:"Loquacious",
+pronunciation:"loh-KWAY-shus",
+meaning:"Very talkative",
+example:"The loquacious speaker dominated the discussion."
 }
 
 ];
@@ -525,44 +543,11 @@ JSON.parse(localStorage.getItem('weak')) || [];
 let mastered =
 JSON.parse(localStorage.getItem('mastered')) || [];
 
-/* ========================= */
-/* COUNTDOWN */
-/* ========================= */
+let viewedQuant =
+JSON.parse(localStorage.getItem('viewedQuant')) || [];
 
-function updateCountdown(){
-
-const examDate =
-new Date('2026-07-15T00:00:00');
-
-const now =
-new Date();
-
-const diff =
-examDate - now;
-
-const days =
-Math.floor(diff/(1000*60*60*24));
-
-const hours =
-Math.floor((diff%(1000*60*60*24))/(1000*60*60));
-
-const mins =
-Math.floor((diff%(1000*60*60))/(1000*60));
-
-const secs =
-Math.floor((diff%(1000*60))/1000);
-
-document.getElementById('countdown').innerHTML =
-`${days}d ${hours}h ${mins}m ${secs}s Remaining`;
-
-document.getElementById('daysLeft').innerHTML =
-days;
-
-}
-
-setInterval(updateCountdown,1000);
-
-updateCountdown();
+let viewedVocab =
+JSON.parse(localStorage.getItem('viewedVocab')) || [];
 
 /* ========================= */
 /* CREATE FLASHCARDS */
@@ -570,22 +555,44 @@ updateCountdown();
 
 function createFlashcards(){
 
-const quantContainer =
+createQuantCard();
+
+createVocabCard();
+
+}
+
+/* ========================= */
+/* RANDOM QUANT CARD */
+/* ========================= */
+
+function createQuantCard(){
+
+const container =
 document.getElementById('quantCards');
 
-const vocabContainer =
-document.getElementById('vocabCards');
+container.innerHTML='';
 
-/* QUANT */
+const card =
+quantFlashcards[
+Math.floor(
+Math.random()*quantFlashcards.length
+)
+];
 
-quantFlashcards.forEach(card=>{
+if(!viewedQuant.includes(card.title)){
 
-const div =
-document.createElement('div');
+viewedQuant.push(card.title);
 
-div.className='flashcard';
+localStorage.setItem(
+'viewedQuant',
+JSON.stringify(viewedQuant)
+);
 
-div.innerHTML = `
+}
+
+container.innerHTML = `
+
+<div class="flashcard">
 
 <div class="flash-inner">
 
@@ -607,11 +614,11 @@ ${card.content}
 ${card.extra}
 </p>
 
-<button onclick="event.stopPropagation(); markCard('easy','${card.title}')">
+<button onclick="event.stopPropagation(); nextCard('easy','${card.title}','quant')">
 Easy
 </button>
 
-<button onclick="event.stopPropagation(); markCard('hard','${card.title}')">
+<button onclick="event.stopPropagation(); nextCard('hard','${card.title}','quant')">
 Hard
 </button>
 
@@ -619,22 +626,48 @@ Hard
 
 </div>
 
+</div>
+
 `;
 
-quantContainer.appendChild(div);
+enableFlashcardFlip();
 
-});
+renderDictionary();
 
-/* VOCAB */
+}
 
-vocabFlashcards.forEach(card=>{
+/* ========================= */
+/* RANDOM VOCAB CARD */
+/* ========================= */
 
-const div =
-document.createElement('div');
+function createVocabCard(){
 
-div.className='flashcard';
+const container =
+document.getElementById('vocabCards');
 
-div.innerHTML = `
+container.innerHTML='';
+
+const card =
+vocabFlashcards[
+Math.floor(
+Math.random()*vocabFlashcards.length
+)
+];
+
+if(!viewedVocab.includes(card.word)){
+
+viewedVocab.push(card.word);
+
+localStorage.setItem(
+'viewedVocab',
+JSON.stringify(viewedVocab)
+);
+
+}
+
+container.innerHTML = `
+
+<div class="flashcard">
 
 <div class="flash-inner">
 
@@ -663,11 +696,11 @@ ${card.meaning}
 ${card.example}
 </p>
 
-<button onclick="event.stopPropagation(); markCard('easy','${card.word}')">
+<button onclick="event.stopPropagation(); nextCard('easy','${card.word}','vocab')">
 Easy
 </button>
 
-<button onclick="event.stopPropagation(); markCard('hard','${card.word}')">
+<button onclick="event.stopPropagation(); nextCard('hard','${card.word}','vocab')">
 Hard
 </button>
 
@@ -675,13 +708,31 @@ Hard
 
 </div>
 
+</div>
+
 `;
 
-vocabContainer.appendChild(div);
-
-});
-
 enableFlashcardFlip();
+
+renderDictionary();
+
+}
+
+/* ========================= */
+/* NEXT CARD */
+/* ========================= */
+
+function nextCard(level,name,type){
+
+markCard(level,name);
+
+if(type==='quant'){
+createQuantCard();
+}
+
+if(type==='vocab'){
+createVocabCard();
+}
 
 }
 
@@ -691,11 +742,15 @@ enableFlashcardFlip();
 
 function enableFlashcardFlip(){
 
-document.querySelectorAll('.flashcard').forEach(card=>{
+document.querySelectorAll('.flashcard')
+.forEach(card=>{
 
 card.onclick = function(e){
 
-if(e.target.tagName.toLowerCase()==='button'){
+if(
+e.target.tagName.toLowerCase()
+==='button'
+){
 return;
 }
 
@@ -717,12 +772,18 @@ if(!reviewed.includes(name)){
 reviewed.push(name);
 }
 
-if(level==='easy' && !mastered.includes(name)){
+if(level==='easy' &&
+!mastered.includes(name)){
+
 mastered.push(name);
+
 }
 
-if(level==='hard' && !weak.includes(name)){
+if(level==='hard' &&
+!weak.includes(name)){
+
 weak.push(name);
+
 }
 
 localStorage.setItem(
@@ -742,8 +803,6 @@ JSON.stringify(mastered)
 
 updateAnalytics();
 
-renderVaults();
-
 }
 
 /* ========================= */
@@ -752,51 +811,53 @@ renderVaults();
 
 function updateAnalytics(){
 
-document.getElementById('reviewedCount').innerHTML =
+document.getElementById(
+'reviewedCount'
+).innerHTML =
 reviewed.length;
 
-document.getElementById('weakCount').innerHTML =
+document.getElementById(
+'weakCount'
+).innerHTML =
 weak.length;
 
-document.getElementById('masteredCount').innerHTML =
+document.getElementById(
+'masteredCount'
+).innerHTML =
 mastered.length;
 
 const retention =
 reviewed.length
-? Math.floor((mastered.length/reviewed.length)*100)
+? Math.floor(
+(mastered.length/reviewed.length)*100
+)
 : 0;
 
-document.getElementById('retentionRate').innerHTML =
+document.getElementById(
+'retentionRate'
+).innerHTML =
 retention + '%';
 
 }
 
 /* ========================= */
-/* RENDER VAULTS */
+/* DICTIONARY */
 /* ========================= */
 
-function renderVaults(){
+function renderDictionary(){
 
-const reviewedVault =
-document.getElementById('reviewedVault');
+/* QUANT */
 
-const weakVault =
-document.getElementById('weakVault');
+const quantDictionary =
+document.getElementById(
+'reviewedVault'
+);
 
-const masteredVault =
-document.getElementById('masteredVault');
+quantDictionary.innerHTML='';
 
-reviewedVault.innerHTML='';
+viewedQuant.forEach(card=>{
 
-weakVault.innerHTML='';
-
-masteredVault.innerHTML='';
-
-/* REVIEWED */
-
-reviewed.forEach(card=>{
-
-reviewedVault.innerHTML += `
+quantDictionary.innerHTML += `
 
 <div class="flashcard">
 
@@ -806,14 +867,14 @@ reviewedVault.innerHTML += `
 
 <h3>${card}</h3>
 
-<p>Reviewed Card</p>
+<p>Quant Card</p>
 
 </div>
 
 <div class="flash-back">
 
 <p>
-Previously reviewed GRE flashcard.
+Previously viewed quant flashcard.
 </p>
 
 </div>
@@ -826,45 +887,18 @@ Previously reviewed GRE flashcard.
 
 });
 
-/* WEAK */
+/* VOCAB */
 
-weak.forEach(card=>{
+const vocabDictionary =
+document.getElementById(
+'weakVault'
+);
 
-weakVault.innerHTML += `
+vocabDictionary.innerHTML='';
 
-<div class="flashcard">
+viewedVocab.forEach(card=>{
 
-<div class="flash-inner">
-
-<div class="flash-front">
-
-<h3>${card}</h3>
-
-<p>Weak Card</p>
-
-</div>
-
-<div class="flash-back">
-
-<p>
-Needs more revision.
-</p>
-
-</div>
-
-</div>
-
-</div>
-
-`;
-
-});
-
-/* MASTERED */
-
-mastered.forEach(card=>{
-
-masteredVault.innerHTML += `
+vocabDictionary.innerHTML += `
 
 <div class="flashcard">
 
@@ -874,14 +908,14 @@ masteredVault.innerHTML += `
 
 <h3>${card}</h3>
 
-<p>Mastered Card</p>
+<p>Vocabulary Card</p>
 
 </div>
 
 <div class="flash-back">
 
 <p>
-Retention achieved.
+Previously viewed vocabulary flashcard.
 </p>
 
 </div>
@@ -897,6 +931,50 @@ Retention achieved.
 enableFlashcardFlip();
 
 }
+
+/* ========================= */
+/* COUNTDOWN */
+/* ========================= */
+
+function updateCountdown(){
+
+const examDate =
+new Date('2026-07-15T00:00:00');
+
+const now =
+new Date();
+
+const diff =
+examDate - now;
+
+const days =
+Math.floor(diff/(1000*60*60*24));
+
+const hours =
+Math.floor((diff%(1000*60*60*24))/(1000*60*60));
+
+const mins =
+Math.floor((diff%(1000*60*60))/(1000*60));
+
+const secs =
+Math.floor((diff%(1000*60))/1000);
+
+document.getElementById(
+'countdown'
+).innerHTML =
+
+`${days}d ${hours}h ${mins}m ${secs}s Remaining`;
+
+document.getElementById(
+'daysLeft'
+).innerHTML =
+days;
+
+}
+
+setInterval(updateCountdown,1000);
+
+updateCountdown();
 
 /* ========================= */
 /* PROGRESS */
@@ -964,7 +1042,7 @@ createFlashcards();
 
 updateAnalytics();
 
-renderVaults();
+renderDictionary();
 
 </script>
 
