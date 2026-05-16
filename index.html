@@ -184,22 +184,28 @@ transform-style:preserve-3d;
 transform:rotateY(180deg);
 }
 
-.flash-front,.flash-back{
+.flash-front,
+.flash-back{
 position:absolute;
 width:100%;
 height:100%;
+top:0;
+left:0;
 backface-visibility:hidden;
+-webkit-backface-visibility:hidden;
 border-radius:22px;
 padding:20px;
 display:flex;
 flex-direction:column;
 justify-content:center;
 box-shadow:var(--shadow);
+overflow:hidden;
 }
 
 .flash-front{
 background:linear-gradient(135deg,#5b6cff,#7387ff);
 color:white;
+z-index:2;
 }
 
 .flash-back{
@@ -214,6 +220,7 @@ border-radius:10px;
 cursor:pointer;
 font-weight:700;
 background:#eef2ff;
+margin-top:10px;
 }
 
 .footer{
@@ -246,7 +253,7 @@ padding:26px;
 <h1>GRE 330+ AI Dashboard</h1>
 
 <p>
-AI-powered GRE preparation platform focused on flashcard learning, spaced repetition, adaptive revision, retention optimization, and realistic score improvement within 50 days.
+AI-powered GRE preparation platform focused on flashcard learning, spaced repetition, adaptive revision, retention optimization, and realistic score improvement.
 </p>
 
 <div class="countdown" id="countdown"></div>
@@ -286,7 +293,7 @@ AI-powered GRE preparation platform focused on flashcard learning, spaced repeti
 </div>
 
 <p style="margin-top:14px;color:var(--muted)">
-Micro-managed daily GRE system designed to move from ~310 mock level to a 330+ GRE score.
+Micro-managed GRE system designed to move from a 310-level mock to a 330+ GRE score.
 </p>
 
 </div>
@@ -302,7 +309,7 @@ Micro-managed daily GRE system designed to move from ~310 mock level to a 330+ G
 <label>
 <input type="checkbox">
 <div>
-<strong>Watch Quant Video 1</strong><br>
+<strong>Watch Quant Video</strong><br>
 <span style="color:var(--muted)">
 Arithmetic foundations, percentages, ratios, fractions, averages.
 </span>
@@ -314,7 +321,7 @@ Arithmetic foundations, percentages, ratios, fractions, averages.
 <div>
 <strong>Learn 40 GRE Words</strong><br>
 <span style="color:var(--muted)">
-High-frequency GRE vocabulary with examples and memory tricks.
+High-frequency GRE vocabulary with memory tricks.
 </span>
 </div>
 </label>
@@ -324,7 +331,7 @@ High-frequency GRE vocabulary with examples and memory tricks.
 <div>
 <strong>Solve 25 Arithmetic Questions</strong><br>
 <span style="color:var(--muted)">
-Practice percentages, ratios, averages, and arithmetic logic.
+Practice arithmetic concepts deeply.
 </span>
 </div>
 </label>
@@ -335,26 +342,6 @@ Practice percentages, ratios, averages, and arithmetic logic.
 <strong>Complete 20 TC/SE Questions</strong><br>
 <span style="color:var(--muted)">
 Improve contextual vocabulary understanding.
-</span>
-</div>
-</label>
-
-<label>
-<input type="checkbox">
-<div>
-<strong>Read 3 RC Passages</strong><br>
-<span style="color:var(--muted)">
-Practice identifying tone and argument structure.
-</span>
-</div>
-</label>
-
-<label>
-<input type="checkbox">
-<div>
-<strong>Review Error Log</strong><br>
-<span style="color:var(--muted)">
-Convert mistakes into flashcards for revision.
 </span>
 </div>
 </label>
@@ -372,17 +359,16 @@ Convert mistakes into flashcards for revision.
 <h3>Arithmetic Foundations</h3>
 
 <p>
-Today's GRE Quant focus:
+Today's focus:
 - Percentages
 - Ratios
 - Fractions
 - Decimals
 - Averages
-- Basic algebra setup
 </p>
 
 <a href="https://www.youtube.com/watch?v=YVOh7jhPNoc&list=PLuSzlB7V-ZZR7NMIO-A7VqIK1XPnvuTcE&index=1" target="_blank">
-Watch Quant Video 1
+Watch Quant Video
 </a>
 
 </div>
@@ -397,7 +383,7 @@ Watch Quant Video 1
 
 <p style="margin-top:12px">
 GRE Trap:
-Successive percentage changes are NOT directly additive.
+Successive percentage changes are NOT additive.
 </p>
 
 </div>
@@ -427,7 +413,7 @@ Successive percentage changes are NOT directly additive.
 <h2>Dictionary Vault</h2>
 
 <p style="margin-bottom:18px;color:var(--muted)">
-All GRE flashcards reviewed during your preparation timeline are stored here automatically.
+All GRE flashcards reviewed during preparation are stored here automatically.
 </p>
 
 <div class="stats">
@@ -486,30 +472,6 @@ Mastered Flashcards
 
 </div>
 
-<div class="card">
-
-<h2>Daily GRE Tips</h2>
-
-<div class="task">
-<p>
-Never memorize GRE vocabulary passively. Always learn using context and sentence relationships.
-</p>
-</div>
-
-<div class="task">
-<p>
-Timed practice matters more than solving unlimited untimed questions.
-</p>
-</div>
-
-<div class="task">
-<p>
-Most GRE score improvement comes from reviewing mistakes deeply.
-</p>
-</div>
-
-</div>
-
 <div class="footer">
 GRE 330+ AI Learning Platform • July 15, 2026
 </div>
@@ -517,10 +479,6 @@ GRE 330+ AI Learning Platform • July 15, 2026
 </div>
 
 <script>
-
-/* ========================= */
-/* FLASHCARD DATABASE */
-/* ========================= */
 
 const quantFlashcards = [
 
@@ -565,20 +523,9 @@ word:"Quotidian",
 pronunciation:"kwoh-TID-ee-uhn",
 meaning:"Ordinary or everyday",
 example:"GRE vocabulary exceeds quotidian usage."
-},
-
-{
-word:"Taciturn",
-pronunciation:"TASS-ih-turn",
-meaning:"Reserved or silent",
-example:"The taciturn student rarely spoke."
 }
 
 ];
-
-/* ========================= */
-/* STORAGE */
-/* ========================= */
 
 let reviewed =
 JSON.parse(localStorage.getItem('reviewed')) || [];
@@ -588,10 +535,6 @@ JSON.parse(localStorage.getItem('mastered')) || [];
 
 let weak =
 JSON.parse(localStorage.getItem('weak')) || [];
-
-/* ========================= */
-/* COUNTDOWN */
-/* ========================= */
 
 function updateCountdown(){
 
@@ -628,10 +571,6 @@ setInterval(updateCountdown,1000);
 
 updateCountdown();
 
-/* ========================= */
-/* CREATE FLASHCARDS */
-/* ========================= */
-
 function createFlashcards(){
 
 const quantContainer =
@@ -639,8 +578,6 @@ document.getElementById('quantCards');
 
 const vocabContainer =
 document.getElementById('vocabCards');
-
-/* QUANT */
 
 quantFlashcards.forEach(card=>{
 
@@ -657,9 +594,7 @@ div.innerHTML=`
 
 <h3>${card.title}</h3>
 
-<p>
-Tap to reveal
-</p>
+<p>Tap to reveal</p>
 
 </div>
 
@@ -673,17 +608,13 @@ ${card.content}
 ${card.extra}
 </p>
 
-<div style="margin-top:16px;display:flex;gap:8px">
-
-<button onclick="markCard('easy','${card.title}')">
+<button onclick="event.stopPropagation(); markCard('easy','${card.title}')">
 Easy
 </button>
 
-<button onclick="markCard('hard','${card.title}')">
+<button onclick="event.stopPropagation(); markCard('hard','${card.title}')">
 Hard
 </button>
-
-</div>
 
 </div>
 
@@ -694,8 +625,6 @@ Hard
 quantContainer.appendChild(div);
 
 });
-
-/* VOCAB */
 
 vocabFlashcards.forEach(card=>{
 
@@ -712,9 +641,7 @@ div.innerHTML=`
 
 <h3>${card.word}</h3>
 
-<p>
-Tap to reveal
-</p>
+<p>Tap to reveal</p>
 
 </div>
 
@@ -735,17 +662,13 @@ ${card.meaning}
 ${card.example}
 </p>
 
-<div style="margin-top:16px;display:flex;gap:8px">
-
-<button onclick="markCard('easy','${card.word}')">
+<button onclick="event.stopPropagation(); markCard('easy','${card.word}')">
 Easy
 </button>
 
-<button onclick="markCard('hard','${card.word}')">
+<button onclick="event.stopPropagation(); markCard('hard','${card.word}')">
 Hard
 </button>
-
-</div>
 
 </div>
 
@@ -757,12 +680,19 @@ vocabContainer.appendChild(div);
 
 });
 
-/* ENABLE FLIP */
+enableFlashcardFlip();
 
-document.querySelectorAll('.flashcard')
-.forEach(card=>{
+}
 
-card.addEventListener('click',()=>{
+function enableFlashcardFlip(){
+
+document.querySelectorAll('.flashcard').forEach(card=>{
+
+card.addEventListener('click',function(e){
+
+if(e.target.tagName.toLowerCase()==='button'){
+return;
+}
 
 card.classList.toggle('flipped');
 
@@ -771,10 +701,6 @@ card.classList.toggle('flipped');
 });
 
 }
-
-/* ========================= */
-/* MARK CARD */
-/* ========================= */
 
 function markCard(level,name){
 
@@ -817,10 +743,6 @@ renderVaults();
 
 }
 
-/* ========================= */
-/* ANALYTICS */
-/* ========================= */
-
 function updateAnalytics(){
 
 document.getElementById(
@@ -862,28 +784,16 @@ retention + '%';
 
 }
 
-/* ========================= */
-/* RENDER VAULTS */
-/* ========================= */
-
 function renderVaults(){
 
 const reviewedVault =
-document.getElementById(
-'reviewedVault'
-);
+document.getElementById('reviewedVault');
 
 const weakVault =
-document.getElementById(
-'weakVault'
-);
+document.getElementById('weakVault');
 
 const masteredVault =
-document.getElementById(
-'masteredVault'
-);
-
-/* REVIEWED */
+document.getElementById('masteredVault');
 
 reviewedVault.innerHTML='';
 
@@ -899,9 +809,7 @@ reviewedVault.innerHTML += `
 
 <h3>${card}</h3>
 
-<p>
-Reviewed Card
-</p>
+<p>Reviewed Card</p>
 
 </div>
 
@@ -921,8 +829,6 @@ Previously reviewed GRE flashcard.
 
 });
 
-/* WEAK */
-
 weakVault.innerHTML='';
 
 weak.forEach(card=>{
@@ -937,9 +843,7 @@ weakVault.innerHTML += `
 
 <h3>${card}</h3>
 
-<p>
-Weak Card
-</p>
+<p>Weak Card</p>
 
 </div>
 
@@ -959,8 +863,6 @@ Needs additional revision.
 
 });
 
-/* MASTERED */
-
 masteredVault.innerHTML='';
 
 mastered.forEach(card=>{
@@ -975,9 +877,7 @@ masteredVault.innerHTML += `
 
 <h3>${card}</h3>
 
-<p>
-Mastered Card
-</p>
+<p>Mastered Card</p>
 
 </div>
 
@@ -997,24 +897,9 @@ Strong retention achieved.
 
 });
 
-/* ENABLE FLIP */
-
-document.querySelectorAll('.flashcard')
-.forEach(card=>{
-
-card.addEventListener('click',()=>{
-
-card.classList.toggle('flipped');
-
-});
-
-});
+enableFlashcardFlip();
 
 }
-
-/* ========================= */
-/* PROGRESS BAR */
-/* ========================= */
 
 const checks =
 document.querySelectorAll(
@@ -1025,62 +910,3 @@ const progressBar =
 document.getElementById(
 'progressBar'
 );
-
-function updateProgress(){
-
-const total =
-checks.length;
-
-const completed =
-document.querySelectorAll(
-'input[type="checkbox"]:checked'
-).length;
-
-const percent =
-(completed/total)*100;
-
-progressBar.style.width =
-percent + '%';
-
-localStorage.setItem(
-'progress',
-percent
-);
-
-}
-
-checks.forEach(c=>{
-
-c.addEventListener(
-'change',
-updateProgress
-);
-
-});
-
-const savedProgress =
-localStorage.getItem(
-'progress'
-);
-
-if(savedProgress){
-
-progressBar.style.width =
-savedProgress + '%';
-
-}
-
-/* ========================= */
-/* INITIALIZE */
-/* ========================= */
-
-createFlashcards();
-
-updateAnalytics();
-
-renderVaults();
-
-</script>
-
-</body>
-</html>
